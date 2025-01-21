@@ -1,0 +1,104 @@
+/* Container and layout styles */
+.root {
+    min-height: 100vh;
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+}
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #dddddd;
+    background-color: #f9f9f9;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profileField {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.profileField label {
+    width: 120px;
+    color: #555;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 36px;
+}
+
+.profileField span {
+    flex: 1;
+    padding: 8px;
+    color: #333;
+    line-height: 20px;
+}
+
+.editableInput {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    height: 36px;
+    transition: border-color 0.3s ease;
+    margin: 0;
+}
+
+.editableInput:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.saveButton {
+    margin-top: 1rem;
+    padding: 8px 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #007BFF;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.saveButton:hover {
+    background-color: #0056b3;
+}
+
+/* Status message styles */
+.statusMessage {
+    margin-top: 1rem;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.statusMessage.success {
+    color: #28a745;
+}
+
+.statusMessage.error {
+    color: #dc3545;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 18px;
+    color: #666;
+}

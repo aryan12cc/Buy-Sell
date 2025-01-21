@@ -4,21 +4,47 @@ const { authenticateJWT } = require('./../authentication/jwt_authentication');
 const router = express.Router();
 
 router.get('/', authenticateJWT, async (req, res) => {
-  const email = req.user;
-  if (!email) {
-    return res.status(400).json({ message: 'Email is required' });
-  }
-  try {
-    const databaseUser = await user.findOne({ email });
-    if (!databaseUser) {
-      return res.status(404).json({ message: 'User not found' });
+    const email = req.user;
+    if(!email) {
+        return res.status(400).json({ message: 'Email is required' });
     }
-    const { password, ...userData } = databaseUser.toObject(); 
-    res.json({ user: userData });
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
+    try {
+        const databaseUser = await user.findOne({ email });
+        if(!databaseUser) {
+        return res.status(404).json({ message: 'User not found' });
+        }
+        const userData = databaseUser.toObject(); 
+        delete userData.passwordHash;
+        res.json({ user: userData });
+    } 
+    catch(error) {
+        console.error('Error fetching user details:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+router.put('/update-user', authenticateJWT, async (req, res) => {
+    const email = req.body.email;
+    const updatedFields = {};
+    updatedFields.firstName = req.body.firstName;
+    updatedFields.lastName = req.body.lastName;
+    updatedFields.age = req.body.age;
+    updatedFields.contact = req.body.contact;
+    try {
+        const updatedUser = await user.findOneAndUpdate({email}, {$set: updatedFields}, {new: true, runValidators: true});
+        if(!updatedUser) {
+            return res.status(404).json({message: 'User not found'});
+        }
+        const userObj = updatedUser.toObject();
+        delete userObj.passwordHash;
+        return res.status(200).json({user: userObj});
+    }
+    catch(error) {
+        const actualUser = await user.findOne({email});
+        const userObj = actualUser.toObject();
+        delete userObj.passwordHash;
+        return res.status(400).json({user: userObj});
+    }
 });
 
 module.exports = router;

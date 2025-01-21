@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 
-const handleRegistration = require('./routes/handleRegistration');
-const handleLogout = require('./routes/handleLogout');
+const handleRegistration = require('./routes/registration');
+const handleLogout = require('./routes/logout');
 const userDetails = require('./routes/userDetails');
 const connectDataBase = require('./database');
 const { authenticateJWT } = require('./authentication/jwt_authentication');

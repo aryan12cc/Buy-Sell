@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const user = require('./../database_tables/user');
+const user = require('../database_tables/user');
 
 router.post('/', async (req, res) => {
-    const { email } = req.body;
+    const { email } = req.body.email;
     try {
         const existingUser = await user.findOne({ email });
         if (!existingUser) {

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const user = require('./../database_tables/user');
-const { generateToken } = require('./../authentication/jwt_authentication');
+const user = require('../database_tables/user');
+const { generateToken } = require('../authentication/jwt_authentication');
 
 async function hashPassword(passwordToHash) {
     const saltRounds = 10;
@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
     }
     try {
         const existingUser = await user.findOne({ email });
-        if (existingUser) {
+        if(existingUser) {
             return res.status(400).json({ status: 'bad', message: 'User with this email already exists' });
         }
         const passwordHash = await hashPassword(password);
@@ -61,18 +61,19 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const existingUser = await user.findOne({ email });
-        if (!user) {
+        if(!user) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
         const isPasswordValid = await comparePasswords(password, existingUser.passwordHash);
-        if (!isPasswordValid) {
+        if(!isPasswordValid) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
         const token = generateToken({ email });
         existingUser.jwtToken = token;
         await existingUser.save();
         res.status(200).json({ message: 'Login successful', user: existingUser, token: token });
-    } catch (err) {
+    } 
+    catch(err) {
         console.error(err);
         res.status(400).json({ message: 'Invalid email or password' });
     }
