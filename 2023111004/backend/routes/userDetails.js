@@ -1,6 +1,7 @@
 const express = require('express');
 const user = require('./../database_tables/user');
 const { authenticateJWT } = require('./../authentication/jwt_authentication');
+const { hashPassword } = require('./../authentication/password_hashing');
 const router = express.Router();
 
 router.get('/', authenticateJWT, async (req, res) => {
@@ -30,6 +31,14 @@ router.put('/update-user', authenticateJWT, async (req, res) => {
     updatedFields.lastName = req.body.lastName;
     updatedFields.age = req.body.age;
     updatedFields.contact = req.body.contact;
+    updatedFields.passwordHash = req.body.password;
+    if(updatedFields.passwordHash === '') {
+        delete updatedFields.passwordHash;
+    }
+    else {
+        updatedFields.passwordHash = await hashPassword(req.body.password);
+    }
+    console.log('req.body: ', req.body);
     try {
         const updatedUser = await user.findOneAndUpdate({email}, {$set: updatedFields}, {new: true, runValidators: true});
         if(!updatedUser) {

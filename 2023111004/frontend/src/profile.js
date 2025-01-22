@@ -8,6 +8,7 @@ function Profile() {
     const [editing, setEditing] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
     const [statusMessageColor, setStatusMessageColor] = useState(''); // for green or red messages
+    const [newPassword, setNewPassword] = useState('');
 
     const fieldLabels = {
         firstName: 'First Name',
@@ -67,7 +68,12 @@ function Profile() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setUser({ ...user, [name]: value });
+        if(name === 'password') {
+            setNewPassword(value);
+        }
+        else {
+            setUser({ ...user, [name]: value });
+        }
     };
 
     const handleSave = async () => {
@@ -80,7 +86,7 @@ function Profile() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(user),
+                body: JSON.stringify({...user, password: newPassword}),
             });
 
             if(response.ok) {
@@ -117,7 +123,7 @@ function Profile() {
         return <div>Loading...</div>;
     }
 
-    const displayedFields = ['firstName', 'lastName', 'email', 'age', 'contact'];
+    const displayedFields = ['firstName', 'lastName', 'email', 'age', 'contact', 'password'];
 
     return (
         <div className={styles.root}>
@@ -138,20 +144,38 @@ function Profile() {
                 <h1>Profile Details</h1>
                 {displayedFields.map((key) => (
                     <div className={styles.profileField} key={key}>
-                        <label>{fieldLabels[key]}: </label>
+                        <label>{key === 'password' && !editing ? '' : key === 'password' ? 'New Password:' : fieldLabels[key] + ':'} </label>
+                        
                         {editing && key !== 'email' ? (
-                            <input
-                                type="text"
-                                name={key}
-                                value={user[key] || ''}
-                                onChange={handleInputChange}
-                                className={styles.editableInput}
-                            />
+                            key === 'password' ? (
+                                // Separate editable password field
+                                <input
+                                    type="text"
+                                    name={key}
+                                    value={newPassword}
+                                    placeholder='Keep this empty to not change password'
+                                    onChange={handleInputChange}
+                                    className={styles.editableInput}
+                                />
+                            ) : (
+                                <input
+                                    type="text"
+                                    name={key}
+                                    value={user[key] || ''}
+                                    onChange={handleInputChange}
+                                    className={styles.editableInput}
+                                />
+                            )
                         ) : (
-                            <span>{user[key]}</span>
+                            key === 'password' ? (
+                                ''
+                            ) : (
+                                <span>{user[key]}</span>
+                            )
                         )}
                     </div>
                 ))}
+
                 {editing ? (
                     <button className={styles.saveButton} onClick={handleSave}>
                         Save
@@ -161,6 +185,7 @@ function Profile() {
                         Edit Profile
                     </button>
                 )}
+
                 
                 {statusMessage && (
                     <div 

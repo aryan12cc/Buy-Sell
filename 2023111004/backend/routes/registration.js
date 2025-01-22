@@ -1,23 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 const user = require('../database_tables/user');
 const { generateToken } = require('../authentication/jwt_authentication');
-
-async function hashPassword(passwordToHash) {
-    const saltRounds = 10;
-    return bcrypt.hash(passwordToHash, saltRounds);
-}
-
-async function comparePasswords(password, hash) {
-    try {
-        const match = await bcrypt.compare(password, hash);
-        return match;
-    } catch (err) {
-        console.error('Error comparing passwords', err);
-        return false;
-    }
-} 
+const { hashPassword, comparePasswords } = require('../authentication/password_hashing');
 
 router.post('/register', async (req, res) => {
     const { firstName, lastName, email, age, contact, password, confirmPassword } = req.body;
