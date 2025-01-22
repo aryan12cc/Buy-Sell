@@ -5,6 +5,14 @@ import './navbar.css';
 function SellItem() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState({
+        name: '',
+        price: '',
+        description: '',
+        category: '',
+    });
+    const [statusMessage, setStatusMessage] = useState('');
+    const [statusMessageColor, setStatusMessageColor] = useState('');
     useEffect(() => {
             const fetchUserData = async () => {
                 const token = localStorage.getItem('token');
@@ -41,6 +49,10 @@ function SellItem() {
     
             fetchUserData();
         }, []);
+    
+    if(loading) {
+        return <div>Loading...</div>;
+    }
 
     const handleLogout = async() => {
         try {
@@ -64,6 +76,50 @@ function SellItem() {
         }
     };
 
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        console.log('Form submitted:', formData);
+        
+        const response = await fetch('http://localhost:5001/api/item-operations/sell-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(formData),
+        });
+        if(response.ok) {
+            setFormData({
+                name: '',
+                price: '',
+                description: '',
+                category: '',
+            });
+            setStatusMessage('Item submitted successfully');
+            setStatusMessageColor('green');
+        }  
+        else {
+            setStatusMessage('Error submitting item');
+            setStatusMessageColor('red');
+            if(response.status === 401) {
+                localStorage.removeItem('token');
+                window.location.href = '/login.html';
+            }
+        }
+    };
+
+    const categoryList = ['Electronics', 'Clothing', 'Books', 'Food', 'General'];
+    const fields = [
+        { label: 'Name', name: 'name', type: 'text', required: true },
+        { label: 'Price (in INR)', name: 'price', type: 'number', required: true, min: 1 },
+        { label: 'Description', name: 'description', type: 'textarea', rows: 5, required: true },
+    ];
+
     return (
         <div className={styles.root}>
             <div className="navbar">
@@ -82,7 +138,71 @@ function SellItem() {
                 </div>
             </div>
 
-            <h1>Sell Item Page</h1>
+            <div className={styles.content}>
+                <h1>Sell An Item</h1>
+                <form className="{styles.itemForm}" onSubmit={handleSubmit}>
+                    {fields.map((field) => (
+                        <div key={field.name} className={styles.formField}>
+                            <label htmlFor={field.name}>{field.label}</label>
+                            {field.type === 'textarea' ? (
+                                <textarea
+                                    id={field.name}
+                                    name={field.name}
+                                    rows={field.rows}
+                                    required={field.required}
+                                    value={formData[field.name]}
+                                    onChange={handleInputChange}
+                                />
+                            ) : (
+                                <input
+                                    id={field.name}
+                                    name={field.name}
+                                    type={field.type}
+                                    required={field.required}
+                                    min={field.min}
+                                    value={formData[field.name]}
+                                    onChange={handleInputChange}
+                                />
+                            )}
+                        </div>
+                    ))}
+                    <div className={styles.inputField}>
+                        <label>Category:</label>
+                        {categoryList.map((category) => (
+                            <div key={category} className={styles.checkboxField}>
+                                <input
+                                    type="radio"
+                                    id={category}
+                                    name="category"
+                                    value={category}
+                                    checked={formData.category === category}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <label htmlFor={category}>{category}</label>
+                            </div>
+                        ))}
+                    </div>
+                    <button type="submit" className={styles.submitButton}>
+                        Submit
+                    </button>
+                </form>
+                {statusMessage && (
+                    <div 
+                        style={{
+                            marginTop: '20px',
+                            color: statusMessageColor,
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        {statusMessage}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

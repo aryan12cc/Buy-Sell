@@ -4,6 +4,7 @@ const cors = require('cors');
 const handleRegistration = require('./routes/registration');
 const handleLogout = require('./routes/logout');
 const userDetails = require('./routes/userDetails');
+const itemOperations = require('./routes/itemOperations');
 const connectDataBase = require('./database');
 const { authenticateJWT } = require('./authentication/jwt_authentication');
 
@@ -26,6 +27,7 @@ app.post('/api/validate-token', authenticateJWT, (req, res) => {
 app.use('/api/submit-registration', handleRegistration);
 app.use('/api/logout-user', handleLogout);
 app.use('/api/user-details', userDetails);
+app.use('/api/item-operations', itemOperations);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { authenticateJWT } = require('./../authentication/jwt_authentication');
 const user = require('../database_tables/user');
 
-router.post('/', async (req, res) => {
+router.post('/', authenticateJWT, async (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
     const { updatedJwtToken } = '';
     try {

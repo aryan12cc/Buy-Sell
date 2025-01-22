@@ -138,7 +138,7 @@ function Profile() {
         }
     };
 
-    if (loading) {
+    if(loading) {
         return <div>Loading...</div>;
     }
 
