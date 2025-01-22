@@ -27,11 +27,11 @@ function Profile() {
             }
             try {
                 const response = await fetch('http://localhost:5001/api/user-details', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
 
                 if(response.ok) {
@@ -55,10 +55,30 @@ function Profile() {
         fetchUserData();
     }, []);
 
-    const handleLogout = () => {
-        setStatusMessage('');
-        localStorage.removeItem('token');
-        window.location.href = '/login.html';
+    const handleLogout = async() => {
+        try {
+            const response = await fetch('http://localhost:5001/api/logout-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            console.log('response:', response);
+            if(response.ok) {
+                setStatusMessage('');
+                localStorage.removeItem('token');
+                window.location.href = '/login.html';
+            }
+            else {
+                setStatusMessage('Error logging out');
+                setStatusMessageColor('red');
+            }
+        }
+        catch (error) {
+            setStatusMessage('Error logging out');
+            setStatusMessageColor('red');
+        }
     };
 
     const handleEditToggle = () => {
@@ -80,7 +100,7 @@ function Profile() {
         try {
             const token = localStorage.getItem('token');
             console.log('user:', user);
-            const response = await fetch('http://localhost:5001/api/user-details/update-user', {
+            const response = fetch('http://localhost:5001/api/user-details/update-user', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,9 +149,12 @@ function Profile() {
         <div className={styles.root}>
             <div className="navbar">
                 <div className="navbar-left">
-                    <a href="">Home</a>
-                    <a href="">About</a>
-                    <a href="">Contact</a>
+                    <a href="profile.html">Profile</a>
+                    <a href="sell-item.html">Sell</a>
+                    <a href="pending-deliveries.html">Pending Deliveries</a>
+                    <a href="catalogue.html">Catalogue</a>
+                    <a href="history.html">Order history</a>
+                    <a href="cart.html">Cart</a>
                 </div>
                 <div className="navbar-right">
                     <button className="logout-button" onClick={handleLogout}>

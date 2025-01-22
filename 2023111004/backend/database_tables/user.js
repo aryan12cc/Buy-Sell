@@ -38,7 +38,16 @@ const userSchema = new mongoose.Schema(
         message: 'Email must belong to students.iiit.ac.in, research.iiit.ac.in, or iiit.ac.in domains.',
         },
     },
-    age: { type: Number, required: true },
+    age: {
+        type: Number,
+        required: true,
+        validate: {
+            validator: function(value) {
+                return value > 0;
+            },
+            message: "Age must be greater than 0."
+        }
+    },
     contact: {
         type: Number,
         required: true,

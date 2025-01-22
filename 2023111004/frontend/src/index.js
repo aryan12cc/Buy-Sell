@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './login';
 import Profile from './profile';
+import SellItem from './sell-item';
+import PendingDeliveries from './pending-deliveries';
+import Catalogue from './catalogue';
+import OrderHistory from './history';
+import Cart from './cart';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -19,6 +24,11 @@ root.render(
       <Route path="/" element={<RedirectToLogin />} />
       <Route path="/login.html" element={<Login />} />
       <Route path="/profile.html" element={<Profile />} />
+      <Route path="/sell-item.html" element={<SellItem />} />
+      <Route path="/pending-deliveries.html" element={<PendingDeliveries />} />
+      <Route path="/catalogue.html" element={<Catalogue />} />
+      <Route path="/history.html" element={<OrderHistory />} />
+      <Route path="/cart.html" element={<Cart />} />
     </Routes>
   </Router>
 );
