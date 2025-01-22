@@ -99,8 +99,7 @@ function Profile() {
     const handleSave = async () => {
         try {
             const token = localStorage.getItem('token');
-            console.log('user:', user);
-            const response = fetch('http://localhost:5001/api/user-details/update-user', {
+            const response = await fetch('http://localhost:5001/api/user-details/update-user', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,10 +107,10 @@ function Profile() {
                 },
                 body: JSON.stringify({...user, password: newPassword}),
             });
-
             if(response.ok) {
                 const newUserDetails = await response.json();
                 setUser(newUserDetails.user);
+                setNewPassword('');
                 setEditing(false);
                 setStatusMessage('Profile updated successfully!');
                 setStatusMessageColor('green');

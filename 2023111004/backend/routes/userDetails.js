@@ -32,13 +32,12 @@ router.put('/update-user', authenticateJWT, async (req, res) => {
     updatedFields.age = req.body.age;
     updatedFields.contact = req.body.contact;
     updatedFields.passwordHash = req.body.password;
-    if(updatedFields.passwordHash === '') {
+    if(updatedFields.passwordHash === '' || !updatedFields.passwordHash) {
         delete updatedFields.passwordHash;
     }
     else {
         updatedFields.passwordHash = await hashPassword(req.body.password);
     }
-    console.log('req.body: ', req.body);
     try {
         const updatedUser = await user.findOneAndUpdate({email}, {$set: updatedFields}, {new: true, runValidators: true});
         if(!updatedUser) {
