@@ -1,0 +1,121 @@
+.root {
+    min-height: 100vh;
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+}
+
+h1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h3 {
+    margin-bottom: 0px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+.catalogue {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.filtersSidebar {
+    padding-top: 1rem;
+    display: block;
+    margin-left: 5px;
+    gap: 1rem;
+    margin-right: 30px;
+}
+
+.filtersSidebar h3, h4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.filterRow {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+    flex-grow: 1;
+}
+
+.filterRow label {
+    margin-left: 1rem;
+}
+
+.filterCheckbox label {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.searchBar {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.searchBar input {
+    width: 25vw;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.searchBar button {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    padding: 7px 10px;
+    color: #66CC66;
+    font-size: 16px;
+    border: 1px solid #66CC66;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.searchBar button:hover {
+    background-color: #66CC66;
+    color: white;
+    border: 1px solid #66CC66;
+}
+
+.items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #dddddd;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}

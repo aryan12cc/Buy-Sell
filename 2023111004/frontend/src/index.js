@@ -8,6 +8,7 @@ import PendingDeliveries from './pending-deliveries';
 import Catalogue from './catalogue';
 import OrderHistory from './history';
 import Cart from './cart';
+import ViewItem from './view-item';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -29,6 +30,7 @@ root.render(
       <Route path="/catalogue.html" element={<Catalogue />} />
       <Route path="/history.html" element={<OrderHistory />} />
       <Route path="/cart.html" element={<Cart />} />
+      <Route path="/view-item/:id.html" element={<ViewItem />} />
     </Routes>
   </Router>
 );
