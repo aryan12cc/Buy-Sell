@@ -28,6 +28,7 @@ router.post('/register', async (req, res) => {
             contact,
             passwordHash,
             jwtToken: '',
+            cartItems: []
         });
 
         await newUser.save();

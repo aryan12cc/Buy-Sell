@@ -5,6 +5,7 @@ const handleRegistration = require('./routes/registration');
 const handleLogout = require('./routes/logout');
 const userDetails = require('./routes/userDetails');
 const itemOperations = require('./routes/itemOperations');
+const cartOperations = require('./routes/cartOperations');
 const connectDataBase = require('./database');
 const { authenticateJWT } = require('./authentication/jwt_authentication');
 
@@ -28,6 +29,7 @@ app.use('/api/submit-registration', handleRegistration);
 app.use('/api/logout-user', handleLogout);
 app.use('/api/user-details', userDetails);
 app.use('/api/item-operations', itemOperations);
+app.use('/api/cart-operations', cartOperations);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

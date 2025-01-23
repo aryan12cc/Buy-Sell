@@ -4,12 +4,14 @@ const item = require('./../database_tables/item');
 const { authenticateJWT } = require('./../authentication/jwt_authentication');
 
 router.post('/sell-item', authenticateJWT, async(req, res) => {
+    console.log('Sell item request:', req.body);
+    console.log('req.body = ', req.body);
     try {
         const { name, price, description, category} = req.body;
         const newItem = new item({
             name,
-            description,
             price,
+            description,
             category,
             seller: req.user,
         });

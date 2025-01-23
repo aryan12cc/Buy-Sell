@@ -40,13 +40,6 @@ const itemSchema = new mongoose.Schema(
         seller: {
             type: String,
             required: true,
-            validate: {
-                validator: async function(value) {
-                    const userExists = await User.findOne({ email: value });
-                    return userExists !== null;
-                },
-                message: 'Seller does not exist.'
-            }
         }
     },
     {

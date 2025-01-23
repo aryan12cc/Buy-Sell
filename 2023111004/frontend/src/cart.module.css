@@ -1,0 +1,101 @@
+.root {
+    min-height: 100vh;
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 35%;
+    margin: 0 auto;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.itemDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.leftSide {
+    flex: 3;
+    text-align: left;
+}
+
+.leftSide h2 {
+    font-size: 1.5rem;
+    text-align: left;
+    justify-content: flex-start;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.leftSide p {
+    font-size: 1rem;
+    color: #555;
+    margin: 5px 0;
+}
+
+.rightSide {
+    flex: 1;
+    text-align: right;
+}
+
+.rightSide p {
+    font-size: 1.25rem;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.rightSide p::before {
+    content: '₹';
+}
+
+.removeButton {
+    padding: 10px 15px;
+    border: 1px solid #FF0000;
+    background-color: #FFFFFF;
+    color: #FF0000;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.removeButton:hover {
+    background-color: #FF0000;
+    border-color: #FF0000;
+    color: white;
+}
+
+.finalOrder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.finalOrderButton {
+    padding: 10px 15px;
+    color: #28a745;
+    font-size: 16px;
+    border: 1px solid #28a745;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.finalOrderButton:hover {
+    background-color: #28a745;
+    color: white;
+    border: 1px solid #28a745;
+}

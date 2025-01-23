@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const item = require('./item');
 
 const userSchema = new mongoose.Schema(
 {
@@ -60,9 +61,23 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash: { type: String, required: true },
     jwtToken: { type: String },
-    },
-    { timestamps: true }
-);
+    cartItems: {
+        type: Array,
+        validate: {
+            validator: async function(value) {
+                for(const itemId of value) {
+                    console.log('Item ID:', typeof itemId);
+                    const itemData = await item.findById(itemId);
+                    if(!itemData) return false;
+                }
+                return true;
+            },
+        }
+    }
+},
+{ 
+    timestamps: true 
+});
 
 const User = mongoose.model('user', userSchema);
 
