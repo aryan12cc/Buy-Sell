@@ -163,20 +163,20 @@ function ViewItem() {
                         <label className={styles.label}>{field[0].toUpperCase() + field.slice(1)}:</label>
                         <div className={styles.value}>
                             <span>
-                                {itemData[field]}
+                                {itemData ? itemData[field] : ''}
                             </span>
                         </div>
                     </div>
                 ))}
                 <button 
                     className={styles.addToCartButton} 
-                    disabled={user && user.email === itemData.seller}
+                    disabled={user && itemData && user.email === itemData.seller}
                     style={{ 
-                        backgroundColor: user && user.email === itemData.seller ? 'grey' : '#007bff',
-                        borderColor: user && user.email === itemData.seller ? 'grey' : '#007bff',
+                        backgroundColor: user && itemData && user.email === itemData.seller ? 'grey' : '#007bff',
+                        borderColor: user && itemData && user.email === itemData.seller ? 'grey' : '#007bff',
                     }}
                     onClick={() => {
-                        if (user.email !== itemData.seller) {
+                        if (user && itemData && user.email !== itemData.seller) {
                             addToCart();
                         }
                     }}

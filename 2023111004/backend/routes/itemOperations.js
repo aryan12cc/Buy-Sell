@@ -57,4 +57,16 @@ router.post('/get-item-by-id', authenticateJWT, async(req, res) => {
     }
 });
 
+router.delete('/delete-item/:itemId', authenticateJWT, async(req, res) => {
+    try {
+        const { itemId } = req.params;
+        await item.findByIdAndDelete(itemId);
+        return res.status(200).json({ message: 'Item deleted successfully' });
+    }
+    catch(err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 module.exports = router;

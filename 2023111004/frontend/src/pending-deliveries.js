@@ -5,6 +5,10 @@ import './navbar.css';
 function PendingDeliveries() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [deliveryItems, setDeliveryItems] = useState([]);
+    const [statusMessage, setStatusMessage] = useState('');
+    const [statusMessageColor, setStatusMessageColor] = useState('black');
+    const [isPageLoaded, setIsPageLoaded] = useState(0);
     useEffect(() => {
             const fetchUserData = async () => {
                 const token = localStorage.getItem('token');
@@ -14,11 +18,11 @@ function PendingDeliveries() {
                 }
                 try {
                     const response = await fetch('http://localhost:5001/api/user-details', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    },
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token}`,
+                        },
                     });
     
                     if(response.ok) {
@@ -38,7 +42,6 @@ function PendingDeliveries() {
                     setLoading(false);
                 }
             };
-    
             fetchUserData();
         }, []);
 
@@ -63,6 +66,70 @@ function PendingDeliveries() {
 
         }
     };
+
+    const fetchDeliveryItems = async () => {
+        try {
+            const response = await fetch('http://localhost:5001/api/order-operations/pending-deliveries', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+
+            if(response.ok) {
+                const output = await response.json();
+                console.log('output = ', output);
+                setDeliveryItems(output.pendingDeliveries);
+            }
+            else {
+                setStatusMessage('Error fetching delivery items');
+                setStatusMessageColor('red');
+            }
+        }
+        catch(error) {
+
+        }
+    };
+
+    const checkOTP = async(id) => {
+        const otpInput = document.querySelector('input[type="number"]').value;
+        if(!otpInput) {
+            setStatusMessage('Please enter OTP');
+            setStatusMessageColor('red');
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:5001/api/order-operations/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({ otp: otpInput, orderId: id }),
+            });
+            if(response.ok) {
+                fetchDeliveryItems();
+            } 
+            else {
+                const error = await response.json();
+                setStatusMessage(error.message);
+                setStatusMessageColor('red');
+            }
+        } 
+        catch(error) {
+            setStatusMessage('Error verifying OTP');
+            setStatusMessageColor('red');
+        }
+    }
+    if(!loading && isPageLoaded === 0) {
+        fetchDeliveryItems();
+        setIsPageLoaded(1);
+    }
+
+    if(loading) {
+        return (<div>Loading...</div>)
+    }
     
     return (
         <div className={styles.root}>
@@ -81,8 +148,36 @@ function PendingDeliveries() {
                     </button>
                 </div>
             </div>
-
-            <h1>Pending Deliveries Page</h1>
+            <h1>Pending Deliveries</h1>
+            <div className={styles.container}>
+                <div className={styles.deliveryItems}>
+                    {deliveryItems.length > 0 ? (
+                        deliveryItems.map((deliveryItem) => (
+                            <div key={deliveryItem._id} className={styles.deliveryItem}>
+                                <p><strong>Item Name: </strong>{deliveryItem.item_name}</p>
+                                <p><strong>Amount: &#8377;</strong>{deliveryItem.amount}</p>
+                                <p><strong>Buyer Name: </strong>{deliveryItem.buyer_id}</p>
+                                <input type="number" placeholder="Enter OTP" />
+                                <button onClick={() => checkOTP(deliveryItem._id)}>Submit OTP</button>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No items found</p>
+                    )}
+                </div>
+                {statusMessage && (
+                    <div 
+                        style={{
+                            marginTop: '20px',
+                            color: statusMessageColor,
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        {statusMessage}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

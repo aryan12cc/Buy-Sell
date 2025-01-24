@@ -63,16 +63,6 @@ const userSchema = new mongoose.Schema(
     jwtToken: { type: String },
     cartItems: {
         type: Array,
-        validate: {
-            validator: async function(value) {
-                for(const itemId of value) {
-                    console.log('Item ID:', typeof itemId);
-                    const itemData = await item.findById(itemId);
-                    if(!itemData) return false;
-                }
-                return true;
-            },
-        }
     }
 },
 { 

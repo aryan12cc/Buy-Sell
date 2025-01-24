@@ -3,8 +3,15 @@ import styles from './history.module.css';
 import './navbar.css';
 
 function OrderHistory() {
-    const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [fetchedOrderHistory, setFetchedOrderHistory] = useState(0);
+    const [activeTab, setActiveTab] = useState('pending');
+    const [otp, setOtp] = useState('');
+    const [pendingOrders, setPendingOrders] = useState([]);
+    const [boughtOrders, setBoughtOrders] = useState([]);
+    const [soldOrders, setSoldOrders] = useState([]);
+    const [statusMessage, setStatusMessage] = useState('');
+    const [statusMessageColor, setStatusMessageColor] = useState('black');
     useEffect(() => {
             const fetchUserData = async () => {
                 const token = localStorage.getItem('token');
@@ -22,8 +29,7 @@ function OrderHistory() {
                     });
     
                     if(response.ok) {
-                        const data = await response.json();
-                        setUser(data.user);
+                        await response.json();
                     } 
                     else {
                         localStorage.removeItem('token');
@@ -64,6 +70,120 @@ function OrderHistory() {
         }
     };
 
+    const fetchOrderHistory = async () => {
+        try {
+            const response = await fetch('http://localhost:5001/api/order-operations/fetch-history', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            if(response.ok) {
+                const receivedValue = await response.json();
+                setPendingOrders(receivedValue.pending);
+                setBoughtOrders(receivedValue.bought);
+                setSoldOrders(receivedValue.sold);
+            }
+        }
+        catch(error) {
+
+        }
+    }
+    if(!loading && fetchedOrderHistory === 0 && activeTab) {
+        fetchOrderHistory();
+        setFetchedOrderHistory(1);
+    }
+
+    if(loading) {
+        return <p>Loading...</p>
+    }
+
+    const changeHashedOtp = async(orderId, otp) => {
+        try {
+            const response = await fetch('http://localhost:5001/api/order-operations/change-hashed-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({ orderId, otp }),
+            });
+            if(response.ok) {
+                const data = await response.json();
+                setStatusMessage(data.message);
+                setStatusMessageColor('green');
+            }
+            else {
+                const error = await response.json();
+                setStatusMessage(error.message);
+                setStatusMessageColor('red');
+            }
+        }
+        catch(error) {
+
+        }
+    }
+
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'pending':
+                return (
+                    <div>
+                        <h2>Pending Items</h2>
+                        <div className={styles.pendingOrders}>
+                            {pendingOrders.map((order) => (
+                                <div key={order._id} className={styles.order}>
+                                    <p>Item: {order.item_name}</p>
+                                    <p>Buyer: {order.buyer_id}</p>
+                                    <p>OTP: {(localStorage.getItem(`otp_${order._id}`)) ? localStorage.getItem(`otp_${order._id}`) : ''}</p>
+                                    <button onClick={() => {
+                                        const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+                                        localStorage.setItem(`otp_${order._id}`, newOtp);
+                                        setOtp(newOtp);
+                                        changeHashedOtp(order._id, newOtp);
+                                    }}>Generate OTP</button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            case 'bought':
+                return (
+                    <div>
+                        <h2> Bought Items </h2>
+                        <div className={styles.boughtOrders}>
+                            {boughtOrders.map((order) => (
+                                <div key={order._id} className={styles.order}>
+                                    <p>Item: {order.item_name}</p>
+                                    <p>Seller: {order.seller_id}</p>
+                                    <p>Price: {order.amount}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+
+            case 'sold':
+                return (
+                    <div>
+                        <h2> Sold Items </h2>
+                        <div className={styles.soldOrders}>
+                            {soldOrders.map((order) => (
+                                <div key={order._id} className={styles.order}>
+                                    <p>Item: {order.item_name}</p>
+                                    <p>Buyer: {order.buyer_id}</p>
+                                    <p>Price: {order.amount}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className={styles.root}>
             <div className="navbar">
@@ -82,9 +202,17 @@ function OrderHistory() {
                 </div>
             </div>
 
-            <h1>Order History Page</h1>
+            <h1>Order History</h1>
+            <div className={styles.tabs}>
+                <button onClick={() => setActiveTab('pending')}>Pending</button>
+                <button onClick={() => setActiveTab('bought')}>Bought</button>
+                <button onClick={() => setActiveTab('sold')}>Sold</button>
+            </div>
+            <div className={styles.tabContent}>
+                {renderTabContent()}
+            </div>
         </div>
-    )
+    );
 }
 
 export default OrderHistory;

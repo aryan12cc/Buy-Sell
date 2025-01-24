@@ -39,6 +39,8 @@ router.get('/view-cart', authenticateJWT, async(req, res) => {
             if(!itemData) continue; // item was sold
             cartItems.push(itemData);
         }
+        userData.cartItems = cartItems;
+        await userData.save();
         return res.status(200).json({ items: cartItems });
     }
     catch(err) {

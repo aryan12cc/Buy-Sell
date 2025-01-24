@@ -1,0 +1,49 @@
+.root {
+    min-height: 100vh;
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.deliveryItems {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.deliveryItem {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #dddddd;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+}
+
+.deliveryItems button {
+    margin-top: 1rem;
+    padding: 7px 10px;
+    background-color: #f9f9f9;
+    color: #66CC66;
+    font-size: 16px;
+    border: 1px solid #66CC66;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.deliveryItems button:hover {
+    background-color: #66CC66;
+    color: white;
+    border: 1px solid #66CC66;
+}

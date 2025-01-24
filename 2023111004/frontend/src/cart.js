@@ -41,40 +41,8 @@ function Cart() {
                 finally {
                     setLoading(false);
                 }
-            };
-
-            const getCartItems = async() => {
-                try {
-                    const response = await fetch('http://localhost:5001/api/cart-operations/view-cart', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${localStorage.getItem('token')}`,
-                        },
-                    });
-
-                    if(response.ok) {
-                        const responseValue = await response.json();
-                        setCartItems(Array.isArray(responseValue.items) ? responseValue.items : []);
-                        if(totalBill == 0) {
-                            let current = 0;
-                            for(let i = 0; i < responseValue.items.length; i++) {
-                                current += responseValue.items[i].price;
-                            }
-                            setTotalBill(current);
-                        }
-                    }
-                    else {
-                        console.error('Error fetching cart items');
-                    }
-                }
-                catch(error) {
-                    console.error('Error fetching cart items:', error);
-                }
-            }
-    
+            };    
             fetchUserData();
-            getCartItems();
         }, []);
     
     const handleLogout = async() => {
@@ -98,8 +66,37 @@ function Cart() {
 
         }
     };
-    
-    const handleRemoveItem = async (itemId) => {
+
+    const getCartItems = async() => {
+        try {
+            const response = await fetch('http://localhost:5001/api/cart-operations/view-cart', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+
+            if(response.ok) {
+                const responseValue = await response.json();
+                setCartItems(Array.isArray(responseValue.items) ? responseValue.items : []);
+                let current = 0;
+                for(let i = 0; i < responseValue.items.length; i++) {
+                    current += responseValue.items[i].price;
+                }
+                setTotalBill(current);
+            }
+            else {
+                console.error('Error fetching cart items');
+            }
+        }
+        catch(error) {
+            console.error('Error fetching cart items:', error);
+        }
+    };
+    getCartItems();
+
+    const deleteCartItem = async(itemId) => {
         try {
             const response = await fetch(`http://localhost:5001/api/cart-operations/remove-item/${itemId}`, {
                 method: 'DELETE',
@@ -109,20 +106,77 @@ function Cart() {
                 },
             });
 
-            if (response.ok) {
-                setCartItems(cartItems.filter(item => item._id !== itemId));
-                const removedItem = cartItems.find(item => item._id === itemId);
-                setTotalBill(totalBill - removedItem.price);
+            if(response.ok) {
+                getCartItems();
                 setStatusMessage('Item removed from cart');
                 setStatusMessageColor('green');
-            } else {
+            }
+            else {
                 setStatusMessage('Error removing item from cart');
                 setStatusMessageColor('red');
             }
-        } catch (error) {
-            setStatusMessage('Error removing item from cart');
-            setStatusMessageColor('red');
         }
+        catch(error) {
+
+        }
+    };
+
+    function getRandomSixDigitNumber() {
+        const number = Math.floor(Math.random() * 1000000);
+        return number.toString().padStart(6, '0');
+    }
+
+    const deleteItem = async(itemId) => {
+        try {
+            const response = await fetch(`http://localhost:5001/api/item-operations/delete-item/${itemId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            if(response.ok) {
+                getCartItems();
+            }
+            else {
+
+            }
+        }
+        catch(error) {
+
+        }
+    }
+
+    const placeOrder = async() => {
+        let count = [];
+        for(let i = 0; i < cartItems.length; i++) {
+            try {
+                const response = await fetch('http://localhost:5001/api/order-operations/add-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                    body: JSON.stringify({
+                        itemId: cartItems[i]._id,
+                        sellerEmail: cartItems[i].seller,
+                        amount: cartItems[i].price,
+                        itemName: cartItems[i].name,
+                    }),
+                });
+                if(response.ok) {
+                    deleteItem(cartItems[i]._id);
+                    count.push(i);
+                }
+                else {
+
+                }
+            }
+            catch(error) {
+
+            }
+        }
+        getCartItems();
     };
 
     if(loading) {
@@ -160,7 +214,7 @@ function Cart() {
                             </div>
                             <div className={styles.rightSide}>
                                 <p>{item.price}</p>
-                                <button className={styles.removeButton} onClick={() => handleRemoveItem(item._id)}>Remove</button>
+                                <button className={styles.removeButton} onClick={() => deleteCartItem(item._id)}>Remove</button>
                             </div>
                         </div>
                     </div>
@@ -169,7 +223,7 @@ function Cart() {
                     <h2>Total Bill: &#8377;{totalBill}</h2>
                 </div>
                 <div className={styles.finalOrder}>
-                    <button className={styles.finalOrderButton}>Place Order</button>
+                    <button className={styles.finalOrderButton} onClick={() => placeOrder()}>Place Order</button>
                 </div>
                 {statusMessage && (
                     <div 
