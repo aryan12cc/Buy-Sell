@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = 'my-super-special-secret-key-that-i-am-not-going-to-tell-anyone-heheheha';
 
 const generateToken = (payload) => {
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '180d' });
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: 180 * 24 * 60 * 60 });
 };
 
 const authenticateJWT = (req, res, next) => {

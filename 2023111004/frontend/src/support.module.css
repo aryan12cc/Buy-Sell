@@ -1,0 +1,81 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+}
+
+.chatContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.messageList {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.userMessage {
+    align-self: flex-end;
+    background-color: #3990ff;
+    color: white;
+    margin-left: auto;
+}
+
+.botMessage {
+    align-self: flex-start;
+    background-color: #f0f0f0;
+    color: black;
+    margin-right: auto;
+}
+
+.inputArea {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.inputArea input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.inputArea button {
+    padding: 10px 20px;
+    background-color: #3990ff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.inputArea button:hover {
+    background-color: #2a80ff;
+}

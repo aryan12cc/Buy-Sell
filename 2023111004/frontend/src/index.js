@@ -9,6 +9,7 @@ import Catalogue from './catalogue';
 import OrderHistory from './history';
 import Cart from './cart';
 import ViewItem from './view-item';
+import Support from './support';
 import { GoogleReCaptchaProvider } from  'react-google-recaptcha-v3';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -33,6 +34,7 @@ root.render(
         <Route path="/history.html" element={<OrderHistory />} />
         <Route path="/cart.html" element={<Cart />} />
         <Route path="/view-item/:id.html" element={<ViewItem />} />
+        <Route path="/support.html" element={<Support />} />
       </Routes>
     </Router>
   </GoogleReCaptchaProvider>

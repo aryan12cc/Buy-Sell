@@ -194,6 +194,7 @@ function OrderHistory() {
                     <a href="catalogue.html">Catalogue</a>
                     <a href="history.html">Order history</a>
                     <a href="cart.html">Cart</a>
+                    <a href="support.html">Chatbot Support</a>
                 </div>
                 <div className="navbar-right">
                     <button className="logout-button" onClick={handleLogout}>
