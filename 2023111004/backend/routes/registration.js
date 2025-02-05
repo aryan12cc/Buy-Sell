@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const existingUser = await user.findOne({ email });
-        if(!user) {
+        if(!existingUser) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
         const isPasswordValid = await comparePasswords(password, existingUser.passwordHash);

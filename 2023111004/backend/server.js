@@ -34,5 +34,5 @@ app.use('/api/cart-operations', cartOperations);
 app.use('/api/order-operations', orderOperations);
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });
