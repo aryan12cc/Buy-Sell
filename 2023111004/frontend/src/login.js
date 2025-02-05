@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styles from './login.module.css';
+import { useGoogleReCaptcha } from  'react-google-recaptcha-v3';
 
 function Login() {
     const [isRegistering, setIsRegistering] = useState(true);
     const [message, setMessage] = useState('');
     const [messageColor, setMessageColor] = useState('');
+
+    const { executeRecaptcha } = useGoogleReCaptcha();
 
     const [formFields, setFormFields] = useState({
         register: [
@@ -48,12 +51,20 @@ function Login() {
         e.preventDefault();
         setMessage('');
         setMessageColor('');
+        if(!executeRecaptcha) {
+            setMessage('reCAPTCHA not loaded. Please try again.');
+            setMessageColor('red');
+            return;
+        }    
+        const recaptchaToken = await executeRecaptcha('signup/login');
+        console.log('reCAPTCHA token:', recaptchaToken);
         const formType = isRegistering ? 'register' : 'login';
         const apiEndpoint = isRegistering ? 'http://localhost:5001/api/submit-registration/register' : 'http://localhost:5001/api/submit-registration/login';
         const formValues = formFields[formType].reduce((acc, field) => {
         acc[field.name] = field.value;
         return acc;
         }, {});
+        formValues.recaptchaToken = recaptchaToken;
         try {
             const response = await fetch(apiEndpoint, {
                 method: 'POST',
