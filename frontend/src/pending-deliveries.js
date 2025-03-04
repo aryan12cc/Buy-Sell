@@ -79,7 +79,6 @@ function PendingDeliveries() {
 
             if(response.ok) {
                 const output = await response.json();
-                console.log('output = ', output);
                 setDeliveryItems(output.pendingDeliveries);
             }
             else {

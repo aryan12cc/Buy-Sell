@@ -64,7 +64,6 @@ function Profile() {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            console.log('response:', response);
             if(response.ok) {
                 setStatusMessage('');
                 localStorage.removeItem('token');
@@ -117,7 +116,6 @@ function Profile() {
             } 
             else {
                 const oldUserDetails = await response.json();
-                console.log('oldUserDetails:', oldUserDetails);
                 setStatusMessage('Error updating profile');
                 setStatusMessageColor('red');
                 setUser(oldUserDetails.user);

@@ -30,7 +30,6 @@ function ViewItem() {
                 if(response.ok) {
                     const data = await response.json();
                     setUser(data.user);
-                    console.log('User data:', data.user);
                 } 
                 else {
                     localStorage.removeItem('token');
@@ -49,7 +48,6 @@ function ViewItem() {
             const token = localStorage.getItem('token');
             const pathname = window.location.pathname;
             const itemId = pathname.split('/').pop().split('.')[0];
-            console.log('Item ID:', itemId);
             if(!token) {
                 window.location.href = '/login.html';
                 return;
@@ -67,7 +65,6 @@ function ViewItem() {
                 if(response.ok) {
                     const data = await response.json();
                     setItemData(data.item);
-                    console.log('Item data:', data.item);
                 } 
                 else {
                     localStorage.removeItem('token');
@@ -83,7 +80,6 @@ function ViewItem() {
             }
         }
         fetchUserData();
-        // console.log('user.email = ', user.email);
         getItemData();
     }, []);
 

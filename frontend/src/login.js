@@ -57,7 +57,6 @@ function Login() {
             return;
         }    
         const recaptchaToken = await executeRecaptcha('signup/login');
-        console.log('reCAPTCHA token:', recaptchaToken);
         const formType = isRegistering ? 'register' : 'login';
         const apiEndpoint = isRegistering ? 'http://localhost:5001/api/submit-registration/register' : 'http://localhost:5001/api/submit-registration/login';
         const formValues = formFields[formType].reduce((acc, field) => {
@@ -80,7 +79,6 @@ function Login() {
                 setMessageColor('green');
 
                 if(isRegistering) {
-                console.log('register-data:', data);
                 setIsRegistering(false);
                 const resetFields = formFields.register.map(field => ({
                     ...field,
@@ -92,7 +90,6 @@ function Login() {
                 });
                 }
                 else {
-                console.log('login-data:', data);
                 localStorage.setItem('token', data.token);
                 window.location.href = '/profile.html';
                 }
@@ -136,7 +133,6 @@ function Login() {
     useEffect(() => {
         const checkToken = async () => {
         const token = localStorage.getItem('token');
-        console.log('token = ', token);
         try {
             const response = await fetch('http://localhost:5001/api/validate-token', {
                 method: 'POST',

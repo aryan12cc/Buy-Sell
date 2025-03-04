@@ -111,10 +111,6 @@ function Catalogue() {
             const newCategories = prev.includes(category)
                 ? prev.filter(c => c !== category)
                 : [...prev, category];
-
-            console.log('selectedCategories:', newCategories);
-            console.log('category:', category);
-
             return newCategories;
         });
     };

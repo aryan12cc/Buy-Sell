@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
 
     const emailDomain = email.split('@')[1];
     if (!['research.iiit.ac.in', 'iiit.ac.in', 'students.iiit.ac.in'].includes(emailDomain)) {
-        return res.status(400).json({ status: 'bad', message: 'Email domain not allowed' });
+        return res.status(400).json({ status: 'bad', message: 'Email domain must be iiit.ac.in' });
     }
 
     try {

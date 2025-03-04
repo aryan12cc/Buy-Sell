@@ -12,15 +12,12 @@ router.post('/add-to-cart', authenticateJWT, async(req, res) => {
             return res.status(404).json({ message: 'Item not found' });
         }
         const userData = await user.findOne({email: req.user});
-        console.log('User data:', userData);
-        console.log('itemId = ', itemId);
         for(let i = 0; i < userData.cartItems.length; i++) {
             if(userData.cartItems[i] === itemId) {
                 return res.status(400).json({ message: 'Item already in cart' });
             }
         }
         userData.cartItems.push(itemId);
-        console.log('User data:', userData);
         await userData.save();
         return res.status(200).json({ message: 'Item added to cart successfully' });
     }
@@ -53,7 +50,7 @@ router.delete('/remove-item/:itemId', authenticateJWT, async(req, res) => {
     try {
         const { itemId } = req.params;
         const userData = await user.findOne({email: req.user});
-        const newCartItems = userData.cartItems.filter((item) => item != itemId);
+        const newCartItems = userData.cartItems.filter((item) => item._id != itemId);
         userData.cartItems = newCartItems;
         await userData.save();
         return res.status(200).json({ message: 'Item removed from cart' });

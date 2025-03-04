@@ -83,7 +83,6 @@ function SellItem() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log('Form submitted:', formData);
         
         const response = await fetch('http://localhost:5001/api/item-operations/sell-item', {
             method: 'POST',
